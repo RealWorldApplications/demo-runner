@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:demo_runner/game/ocean_runner_game.dart';
+// ignore: unused_import
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +30,10 @@ class ObstacleComponent extends PositionComponent
   final ObstacleType type;
   final bool fromTop;
 
+  // ignore: unused_field
   late final double _baseY;
   double _phase = 0;
+  // ignore: unused_field, prefer_final_fields
   bool _passed = false;
 
   @override
@@ -38,47 +41,15 @@ class ObstacleComponent extends PositionComponent
     await super.onLoad();
     _phase = (position.x * 0.03) % (pi * 2);
 
-    if (type == ObstacleType.jellyfish) {
-      add(
-        CircleHitbox(
-          radius: 21,
-          position: Vector2(27, 25),
-          anchor: Anchor.center,
-          collisionType: CollisionType.passive,
-        ),
-      );
-    } else {
-      add(
-        RectangleHitbox(
-          size: Vector2(32, max(24.0, size.y - 14)),
-          position: Vector2(8, fromTop ? 0 : 14),
-          collisionType: CollisionType.passive,
-        ),
-      );
-    }
+    // TODO (Stage 3): Add a passive CircleHitbox (jellyfish) or RectangleHitbox (coralSpire).
   }
 
   @override
+  // ignore: unnecessary_overrides
   void update(double dt) {
     super.update(dt);
-    if (game.state != GameState.playing) return;
-
-    _phase += dt * 3.0;
-    position.x -= game.currentScrollSpeed * dt;
-
-    if (type == ObstacleType.jellyfish) {
-      final maxTop = max(36.0, game.size.y - size.y - 36.0);
-      position.y = (_baseY + sin(_phase) * 26).clamp(36.0, maxTop);
-    }
-
-    if (!_passed && position.x + size.x < game.player.position.x) {
-      _passed = true;
-      game.incrementObstacleScore();
-    }
-
-    if (position.x < -size.x - 40) {
-      removeFromParent();
-    }
+    // TODO (Stage 2): Scroll obstacle left, bob jellyfish, award score on pass,
+    // and call removeFromParent() when off-screen.
   }
 
   @override
@@ -91,14 +62,12 @@ class ObstacleComponent extends PositionComponent
   }
 
   void _renderJellyfish(Canvas canvas) {
-    // Soft bioluminescent aura
     canvas.drawCircle(
       const Offset(27, 24),
       26,
       Paint()..color = const Color(0x28FF4D8D),
     );
 
-    // Undulating tentacles
     final tentaclePaint = Paint()
       ..color = const Color(0xCCFF85B3)
       ..strokeWidth = 2.6
@@ -114,7 +83,6 @@ class ObstacleComponent extends PositionComponent
       canvas.drawPath(tentacle, tentaclePaint);
     }
 
-    // Bell dome
     final domePath = Path()
       ..moveTo(6, 33)
       ..quadraticBezierTo(6, 4, 27, 4)
@@ -132,7 +100,6 @@ class ObstacleComponent extends PositionComponent
         ),
     );
 
-    // Highlight spots
     final spotPaint = Paint()..color = const Color(0x99FFE5EC);
     canvas.drawCircle(const Offset(20, 17), 3.2, spotPaint);
     canvas.drawCircle(const Offset(31, 14), 2.2, spotPaint);
@@ -175,7 +142,6 @@ class ObstacleComponent extends PositionComponent
         ),
     );
 
-    // Bioluminescent coral polyps
     final polypPaint = Paint()..color = const Color(0xCCFFE66D);
     canvas.drawCircle(
       Offset(w * 0.44, fromTop ? h * 0.62 : h * 0.38),

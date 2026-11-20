@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:demo_runner/game/ocean_runner_game.dart';
+// ignore: unused_import
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class PearlCollectible extends PositionComponent
           anchor: Anchor.center,
         );
 
+  // ignore: unused_field
   final double _baseY;
   double _phase = 0;
   bool _collected = false;
@@ -26,14 +28,7 @@ class PearlCollectible extends PositionComponent
   Future<void> onLoad() async {
     await super.onLoad();
     _phase = (position.x * 0.05) % (pi * 2);
-    add(
-      CircleHitbox(
-        radius: 15,
-        position: Vector2.all(18),
-        anchor: Anchor.center,
-        collisionType: CollisionType.passive,
-      ),
-    );
+    // TODO (Stage 3): Add a passive CircleHitbox(radius: 15, position: Vector2.all(18), anchor: Anchor.center).
   }
 
   /// Marks this pearl as collected and triggers score, particles, and chime.
@@ -45,17 +40,11 @@ class PearlCollectible extends PositionComponent
   }
 
   @override
+  // ignore: unnecessary_overrides
   void update(double dt) {
     super.update(dt);
-    if (game.state != GameState.playing) return;
-
-    _phase += dt * 4.0;
-    position.x -= game.currentScrollSpeed * dt;
-    position.y = _baseY + sin(_phase) * 12;
-
-    if (position.x < -50) {
-      removeFromParent();
-    }
+    // TODO (Stage 2): Scroll pearl left, bob vertically with _baseY & _phase,
+    // and call removeFromParent() when off-screen.
   }
 
   @override
@@ -63,14 +52,12 @@ class PearlCollectible extends PositionComponent
     final pulse = 1.0 + sin(_phase * 1.5) * 0.14;
     const center = Offset(18, 18);
 
-    // Outer golden-aqua aura
     canvas.drawCircle(
       center,
       15 * pulse,
       Paint()..color = const Color(0x38FFD166),
     );
 
-    // Lustrous nacre pearl body
     canvas.drawCircle(
       center,
       10,
@@ -87,7 +74,6 @@ class PearlCollectible extends PositionComponent
         ),
     );
 
-    // Crisp rim and specular shine
     canvas.drawCircle(
       center,
       10,

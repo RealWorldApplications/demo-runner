@@ -1,7 +1,10 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
+// Pre-imported for Stage 3 collision detection:
+// ignore: unused_import
 import 'package:demo_runner/game/components/obstacle_component.dart';
+// ignore: unused_import
 import 'package:demo_runner/game/components/pearl_collectible.dart';
 import 'package:demo_runner/game/ocean_runner_game.dart';
 import 'package:flame/collisions.dart';
@@ -162,13 +165,7 @@ class MiniSubPlayer extends SpriteAnimationComponent
   Future<void> onLoad() async {
     await super.onLoad();
     animation = await MiniSubSprites.createAnimation();
-    add(
-      CircleHitbox(
-        radius: 19,
-        position: Vector2(46, 26),
-        anchor: Anchor.center,
-      ),
-    );
+    // TODO (Stage 3): Add a CircleHitbox(radius: 19, position: Vector2(46, 26), anchor: Anchor.center).
     reset();
   }
 
@@ -185,7 +182,7 @@ class MiniSubPlayer extends SpriteAnimationComponent
 
   /// Applies an upward hydro-thrust impulse.
   void thrust() {
-    velocityY = thrustImpulse;
+    // TODO (Stage 1): Set velocityY = thrustImpulse;
   }
 
   /// Resets submarine position, velocity, and pitch for a fresh run.
@@ -212,33 +209,17 @@ class MiniSubPlayer extends SpriteAnimationComponent
       return;
     }
 
-    velocityY += gravity * dt;
-    position.y += velocityY * dt;
-
-    final maxY = max(48.0, game.size.y - 48.0);
-    if (position.y <= 48.0) {
-      position.y = 48.0;
-      if (velocityY < 0) velocityY = 0;
-    } else if (position.y >= maxY) {
-      position.y = maxY;
-      if (velocityY > 0) velocityY = 0;
-    }
-
-    angle = (velocityY / 650.0).clamp(-0.42, 0.52);
+    // TODO (Stage 1): Apply gravity to velocityY, move position.y,
+    // clamp to [48, game.size.y - 48], and update pitch angle.
   }
 
   @override
+  // ignore: unnecessary_overrides
   void onCollisionStart(
     Set<Vector2> intersectionPoints,
     PositionComponent other,
   ) {
     super.onCollisionStart(intersectionPoints, other);
-    if (game.state != GameState.playing) return;
-
-    if (other is ObstacleComponent) {
-      game.handlePlayerCrash(position.clone());
-    } else if (other is PearlCollectible) {
-      other.collect();
-    }
+    // TODO (Stage 3): Handle ObstacleComponent crash and PearlCollectible pickup.
   }
 }
